@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BookLeaf Publishing — Backend Operations API</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #0b0f19 0%, #111827 50%, #0f172a 100%);
+      color: #f1f5f9;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 2rem 1.5rem;
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+    .logo-badge {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.35rem;
+      color: white;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+    }
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+    }
+    .brand-sub {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 0.4rem 0.85rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #34d399;
+    }
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #10b981;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+    .hero {
+      margin: 3rem 0 2rem;
+      text-align: center;
+    }
+    .hero-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      padding: 0.35rem 0.85rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.75rem;
+    }
+    .hero p {
+      font-size: 1.05rem;
+      color: #94a3b8;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .card {
+      background: rgba(30, 41, 59, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 1.25rem;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .card-label {
+      font-size: 0.72rem;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+    .card-value {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+    .card-meta {
+      font-size: 0.75rem;
+      color: #10b981;
+      margin-top: 0.25rem;
+      font-weight: 500;
+    }
+    .api-section {
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      padding: 1.75rem;
+      margin-bottom: 2.5rem;
+    }
+    .api-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .api-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .endpoint-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .endpoint-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      text-decoration: none;
+      color: #cbd5e1;
+      transition: all 0.15s ease;
+    }
+    .endpoint-row:hover {
+      background: rgba(30, 41, 59, 0.9);
+      border-color: rgba(56, 189, 248, 0.4);
+      color: #ffffff;
+      transform: translateX(4px);
+    }
+    .method {
+      font-weight: 700;
+      padding: 0.15rem 0.45rem;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      margin-right: 0.75rem;
+    }
+    .method.get { background: rgba(56, 189, 248, 0.15); color: #38bdf8; }
+    .method.post { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+    .endpoint-desc {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+    .btn-group {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.25rem;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+    .btn-primary {
+      background: #10b981;
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+    }
+    .btn-primary:hover {
+      background: #059669;
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #e2e8f0;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.14);
+    }
+    #live-response {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #050811;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: #38bdf8;
+      max-height: 220px;
+      overflow-y: auto;
+      display: none;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #64748b;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo-badge">B</div>
+        <div>
+          <div class="brand-title">BookLeaf Publishing</div>
+          <div class="brand-sub">Core Operations API Engine</div>
+        </div>
+      </div>
+      <div class="status-pill">
+        <div class="pulse-dot"></div>
+        <span>Live on Vercel Serverless</span>
+      </div>
+    </header>
+
+    <div class="hero">
+      <span class="hero-tag">Flask 3.0 &bull; Python 3.12 &bull; Groq AI &bull; Supabase</span>
+      <h1>Author Support & Operations API</h1>
+      <p>
+        The backend engine powering BookLeaf's automated ticket triage, author inquiry clarification chatbot, and policy-grounded operations workflows.
+      </p>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="card-label">Server Status</div>
+        <div class="card-value">Operational</div>
+        <div class="card-meta">&#10003; 100% Uptime</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Database</div>
+        <div class="card-value">Supabase Cloud</div>
+        <div class="card-meta">PostgreSQL + RLS</div>
+      </div>
+      <div class="card">
+        <div class="card-label">AI Engine</div>
+        <div class="card-value">Groq Cloud</div>
+        <div class="card-meta">openai/gpt-oss-120b</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Deployment</div>
+        <div class="card-value">Vercel WSGI</div>
+        <div class="card-meta">Serverless Function</div>
+      </div>
+    </div>
+
+    <div class="api-section">
+      <div class="api-header">
+        <div class="api-title">Active REST API Endpoints</div>
+        <button class="btn btn-secondary" onclick="checkHealth()">
+          &bull; Live Health Ping
+        </button>
+      </div>
+
+      <div class="endpoint-list">
+        <a href="/api/v1/health" class="endpoint-row" target="_blank">
+          <div>
+            <span class="method get">GET</span>
+            <span>/api/v1/health</span>
+          </div>
+          <span class="endpoint-desc">System diagnostic & integration status</span>
+        </a>
+
+        <div class="endpoint-row">
+          <div>
+            <span class="method post">POST</span>
+            <span>/api/v1/auth/login</span>
+          </div>
+          <span class="endpoint-desc">Author & Administrator JWT authentication</span>
+        </div>
+
+        <div class="endpoint-row">
+          <div>
+            <span class="method post">POST</span>
+            <span>/api/v1/me/ai-clarify</span>
+          </div>
+          <span class="endpoint-desc">Interactive author query clarifier (Groq LLM)</span>
+        </div>
+
+        <div class="endpoint-row">
+          <div>
+            <span class="method get">GET</span>
+            <span>/api/v1/me/tickets</span>
+          </div>
+          <span class="endpoint-desc">Author tickets (strictly data-isolated)</span>
+        </div>
+
+        <div class="endpoint-row">
+          <div>
+            <span class="method get">GET</span>
+            <span>/api/v1/admin/dashboard</span>
+          </div>
+          <span class="endpoint-desc">Operations analytics & ticket triage metrics</span>
+        </div>
+
+        <div class="endpoint-row">
+          <div>
+            <span class="method post">POST</span>
+            <span>/api/v1/admin/tickets/{id}/ai-draft</span>
+          </div>
+          <span class="endpoint-desc">Grounded AI response drafting</span>
+        </div>
+      </div>
+
+      <pre id="live-response"></pre>
+
+      <div class="btn-group">
+        <a href="/api/v1/health" class="btn btn-primary" target="_blank">
+          View Health Status JSON &rarr;
+        </a>
+        <button class="btn btn-secondary" onclick="window.location.reload()">
+          Refresh Status
+        </button>
+      </div>
+    </div>
+
+    <footer>
+      &copy; 2026 BookLeaf Publishing. All rights reserved. Confidential Technical Assignment Evaluation.
+    </footer>
+  </div>
+
+  <script>
+    async function checkHealth() {
+      const box = document.getElementById('live-response');
+      box.style.display = 'block';
+      box.textContent = 'Pinging /api/v1/health...';
+      try {
+        const res = await fetch('/api/v1/health');
+        const data = await res.json();
+        box.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        box.textContent = 'Error: ' + err.message;
+      }
+    }
+  </script>
+</body>
+</html>

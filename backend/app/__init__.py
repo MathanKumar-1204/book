@@ -2,7 +2,7 @@
 BookLeaf Publishing - Flask Application Factory
 """
 
-from flask import Flask
+from flask import Flask, render_template
 from flask_cors import CORS
 from app.config import Config
 from app.utils.errors import register_error_handlers
@@ -30,5 +30,12 @@ def create_app(config_class=Config) -> Flask:
     app.register_blueprint(health_bp, url_prefix="/api/v1")
     app.register_blueprint(author_bp, url_prefix="/api/v1")
     app.register_blueprint(admin_bp, url_prefix="/api/v1/admin")
+
+    # Root landing and status page for browser visitors & Vercel deployment
+    @app.route("/", methods=["GET"])
+    @app.route("/api", methods=["GET"])
+    @app.route("/api/v1", methods=["GET"])
+    def root_landing():
+        return render_template("index.html")
 
     return app
