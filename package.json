@@ -1,0 +1,15 @@
+{
+  "name": "bookleaf-publishing-portal",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "preview": "npm --prefix frontend run preview",
+    "test": "python -m pytest backend/tests -v",
+    "server": "python backend/run.py"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

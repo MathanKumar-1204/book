@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: bookleaf-backend-api
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT run:app
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: FLASK_DEBUG
+        value: 0
+      - key: GROQ_MODEL
+        value: llama-3.3-70b-versatile
+      - key: EMBEDDING_PROVIDER
+        value: local
+      - key: EMBEDDING_DIMENSION
+        value: 384
+      - key: PINECONE_INDEX_NAME
+        value: bookleaf-knowledge-base
